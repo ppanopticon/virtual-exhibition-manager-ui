@@ -17,6 +17,12 @@ export class Exhibition implements IExhibition {
      */
     constructor(public id: string, public name: string, public description: string) {}
 
+    /**
+     * Returns a short ID for this @type {Exhibition}
+     */
+    get shortId(): string {
+        return this.id.substr(0,5);
+    }
 
     /**
      * Copies a @type {IExhibition} to a new @type {Exhibition} object.

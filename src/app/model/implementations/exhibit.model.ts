@@ -21,6 +21,8 @@ export class Exhibit implements IExhibit {
                 public path: string, public light: boolean, public audio: string, public position: Vector3f, public size: Vector3f) {}
 
 
+
+
     /**
      * Copies a @type {IExhibit} to a new @type {Exhibit} object.
      *

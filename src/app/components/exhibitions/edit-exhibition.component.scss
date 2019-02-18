@@ -3,7 +3,19 @@
   height: 100%;
 }
 
+.content {
+  padding: 10px;
+}
+
+.inspector {
+  width: 20%;
+  min-width: 300px;
+  max-width: 500px;
+  padding: 10px;
+}
+
 .dashboard {
+  width: 80%;
   display: flex;
   justify-content: flex-start;
 }
