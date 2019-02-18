@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {VremApiService} from './services/http/vrem-api.service';
 import {from, Observable} from 'rxjs';
-import {ExhibitionSummary} from './model/interfaces/exhibition-summary.model';
+import {ExhibitionSummary} from './model/interfaces/exhibition/exhibition-summary.interface';
 import {Router, RoutesRecognized} from '@angular/router';
 import {share} from 'rxjs/operators';
 import {EditorService} from './services/editor/editor.service';

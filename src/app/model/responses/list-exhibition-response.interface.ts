@@ -1,4 +1,4 @@
-import {ExhibitionSummary} from '../interfaces/exhibition-summary.model';
+import {ExhibitionSummary} from '../interfaces/exhibition/exhibition-summary.interface';
 
 export interface ListExhibitionResponse {
     exhibitions: ExhibitionSummary[];

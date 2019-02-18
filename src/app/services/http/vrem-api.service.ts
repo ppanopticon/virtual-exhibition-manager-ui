@@ -1,11 +1,11 @@
 import {Inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {ExhibitionSummary} from '../../model/interfaces/exhibition-summary.model';
+import {ExhibitionSummary} from '../../model/interfaces/exhibition/exhibition-summary.interface';
 import {RestfulService} from './restful.service';
 import {first, map} from 'rxjs/operators';
-import {Exhibition} from '../../model/interfaces/exhibition.model';
 import {ListExhibitionResponse} from '../../model/responses/list-exhibition-response.interface';
+import {IExhibition} from '../../model/interfaces/exhibition/exhibition.interface';
 
 @Injectable()
 export class VremApiService extends RestfulService {
@@ -33,7 +33,7 @@ export class VremApiService extends RestfulService {
      * @param id string The ID of the desired {Exhibition}
      * @return Observable<Exhibition>
      * */
-    public load(id: string): Observable<Exhibition> {
-        return this.get<Exhibition>('exhibitions/load/' + id).pipe(first());
+    public load(id: string): Observable<IExhibition> {
+        return this.get<IExhibition>('exhibitions/load/' + id).pipe(first());
     }
 }

@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {Exhibition} from '../../model/interfaces/exhibition.model';
 import {VremApiService} from '../http/vrem-api.service';
 import {Observable, of} from 'rxjs';
 import {catchError, first, map, tap} from 'rxjs/operators';
+import {Exhibition} from '../../model/implementations/exhibition.model';
 
 @Injectable()
 export class EditorService {
@@ -41,7 +41,7 @@ export class EditorService {
     public load(id: string): Observable<boolean> {
         return this._api.load(id).pipe(
             first(),
-            tap( e => this._active = e),
+            tap( e => this._active = Exhibition.copy(e)),
             map(e => true),
             catchError(() => of(false))
         );
