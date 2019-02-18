@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
-import {EditExhibitionComponent} from './components/exhibitions/edit/edit-exhibition.component';
-import {ListExhibitionComponent} from './components/exhibitions/list/list-exhibition.component';
+import {EditExhibitionComponent} from './components/exhibitions/edit-exhibition.component';
+import {ListExhibitionComponent} from './components/exhibitions/list-exhibition.component';
 import {ExhibitionExistsGuard} from './exhibition-exists.guard';
 
 

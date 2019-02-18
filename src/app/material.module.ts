@@ -26,7 +26,7 @@ import {
     MatSlideToggleModule,
     MatIconRegistry,
     MatListModule,
-    MatTreeModule
+    MatTreeModule, MatExpansionModule
 } from '@angular/material';
 
 const MATERIAL_MODULES = [
@@ -36,6 +36,7 @@ const MATERIAL_MODULES = [
     MatChipsModule,
     MatCheckboxModule,
     MatDialogModule,
+    MatExpansionModule,
     MatGridListModule,
     MatIconModule,
     MatInputModule,
