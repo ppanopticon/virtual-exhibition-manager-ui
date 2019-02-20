@@ -11,6 +11,7 @@ import {IExhibition} from '../../model/interfaces/exhibition/exhibition.interfac
 export class VremApiService extends RestfulService {
 
     /**
+     * Default constructor.
      *
      * @param _httpClient
      */
@@ -19,7 +20,7 @@ export class VremApiService extends RestfulService {
     }
 
     /**
-     * Uses to API to query for a list of the stored @type {Exhibition}s and returns them as @type {ExhibitionSummary}
+     * Uses the API to query for a list of the stored @type {Exhibition}s and returns them as @type {ExhibitionSummary}.
      *
      * @return Observable<ExhibitionSummary[]>
      * */
@@ -28,12 +29,23 @@ export class VremApiService extends RestfulService {
     }
 
     /**
-     * Uses to API to query for a specific @type {Exhibition}s and returns it
+     * Uses the API to query for a specific @type {IExhibition}s and returns it.
      *
-     * @param id string The ID of the desired {Exhibition}
-     * @return Observable<Exhibition>
+     * @param id string The ID of the desired {IExhibition}
+     * @return Observable<IExhibition>
      * */
     public load(id: string): Observable<IExhibition> {
         return this.get<IExhibition>('exhibitions/load/' + id).pipe(first());
+    }
+
+
+    /**
+     * Uses the API to save a specific @type {Exhibition}s and returns the saved version.
+     *
+     * @param exhibition IExhibition The IExhibition to save.
+     * @return Observable<IExhibition>
+     */
+    public save(exhibition: IExhibition): Observable<IExhibition> {
+        return this.post<IExhibition>('exhibitions/save', JSON.stringify(exhibition), null);
     }
 }
