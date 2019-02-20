@@ -11,7 +11,7 @@ import {Exhibit} from '../../model/implementations/exhibit.model';
     styleUrls: ['edit-exhibition.component.scss']
 })
 export class EditExhibitionComponent {
-    /** */
+    /** Reference to the currently selected element. May be the Exhibition, a Room, Wall or individual Exhibit. */
     private _selected: (Exhibition | Room | Wall | Exhibit);
 
     /**
@@ -24,18 +24,38 @@ export class EditExhibitionComponent {
     }
 
     /**
-     * Getter for the
+     * Getter for the @type {Exhibition}.
      */
     get exhibition(): Exhibition {
         return this._editor.current;
     }
 
     /**
-     *
+     * Getter for the selected element.
      */
     get selected(): (Exhibition | Room | Wall | Exhibit) {
         return this._selected;
     }
+
+    /**
+     * Returns the name of type of the currently selected element.
+     *
+     * @return Type of the selected element.
+     */
+    get selectedType(): string {
+        if (this._selected instanceof Exhibit) {
+            return 'Exhibit';
+        } else if (this._selected instanceof Exhibition) {
+            return 'Exhibition';
+        } else if (this._selected instanceof Room) {
+            return 'Room';
+        } else if (this._selected instanceof Wall) {
+            return 'Wall';
+        } else {
+            return 'Nothing';
+        }
+    }
+
 
     /**
      *
@@ -48,20 +68,20 @@ export class EditExhibitionComponent {
      *
      */
     get isSelectedRoom() {
-        return this._selected instanceof Exhibition;
+        return this._selected instanceof Room;
     }
 
     /**
      *
      */
     get isSelectedWall() {
-        return this._selected instanceof Exhibition;
+        return this._selected instanceof Wall;
     }
 
     /**
      *
      */
     get isSelectedExhibit() {
-        return this._selected instanceof Exhibition;
+        return this._selected instanceof Exhibit;
     }
 }

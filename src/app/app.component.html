@@ -3,12 +3,22 @@
 
 <mat-toolbar id="navbar">
     <span>Virtual Exhibition Manager</span>
+
     <div>
         <button mat-button [matMenuTriggerFor]="exhibitionMenu">{{title}}</button>
         <mat-menu #exhibitionMenu="matMenu">
-            <button (click)="handleClick(exhibition)" mat-menu-item *ngFor='let exhibition of (exhibitions | async)'>{{exhibition.name}}</button>
+            <button (click)="handleExhibitionSelection(exhibition)" mat-menu-item *ngFor='let exhibition of (exhibitions | async)'>{{exhibition.name}}</button>
         </mat-menu>
+
+        <button *ngIf="hasActive" mat-icon-button (click)="handleSaveClick()">
+            <mat-icon aria-label="Save exhibition" matTooltip="Save exhibition to server">save</mat-icon>
+        </button>
+
+        <button  *ngIf="hasActive" mat-icon-button (click)="handleReloadClick()">
+            <mat-icon aria-label="Reload exhibition" matTooltip="Reload exhibition from server">refresh</mat-icon>
+        </button>
     </div>
+
 
     <div style="height: 85%; width: auto;">
         <img src="../assets/uni-basel-logo.png" style="height: 100%; width: auto;"/>

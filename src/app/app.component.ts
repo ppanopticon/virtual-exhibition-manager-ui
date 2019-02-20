@@ -3,8 +3,9 @@ import {VremApiService} from './services/http/vrem-api.service';
 import {from, Observable} from 'rxjs';
 import {ExhibitionSummary} from './model/interfaces/exhibition/exhibition-summary.interface';
 import {Router, RoutesRecognized} from '@angular/router';
-import {share} from 'rxjs/operators';
+import {flatMap, share} from 'rxjs/operators';
 import {EditorService} from './services/editor/editor.service';
+import {MatSnackBar} from '@angular/material';
 
 @Component({
   selector: 'app-root',
@@ -21,9 +22,20 @@ export class AppComponent {
    * @param _api
    * @param _editor
    * @param _router
+   * @public _snackBar
    */
-  constructor(private _api: VremApiService, private _editor: EditorService, private _router: Router) {
+  constructor(private _api: VremApiService,
+              private _editor: EditorService,
+              private _router: Router,
+              private _snackBar: MatSnackBar) {
     this._exhibitions = this._api.list().pipe(share());
+  }
+
+  /**
+   *
+   */
+  get hasActive(): boolean {
+    return this._editor.current != null;
   }
 
   /**
@@ -50,7 +62,33 @@ export class AppComponent {
    *
    * @param summary The selected ExhibitionSummary
    */
-  public handleClick(summary: ExhibitionSummary) {
+  public handleExhibitionSelection(summary: ExhibitionSummary) {
     this._router.navigate([summary.objectId]);
+  }
+
+  /**
+   * Handles the user clicking the save button.
+   */
+  public handleSaveClick() {
+    this._editor.save().subscribe(s => {
+      if (s) {
+        this._snackBar.open(`Exhibition '${this.title}' saved successfully!`);
+      } else {
+        this._snackBar.open(`Failed to save exhibition '${this.title}'!`);
+      }
+    });
+  }
+
+  /**
+   * Handles the user clicking the reload button.
+   */
+  public handleReloadClick() {
+    this._editor.reload().subscribe(s => {
+        if (s) {
+          this._snackBar.open(`Exhibition '${this.title}' reloaded successfully!`);
+        } else {
+          this._snackBar.open('Failed to reload exhibition!');
+        }
+    });
   }
 }
