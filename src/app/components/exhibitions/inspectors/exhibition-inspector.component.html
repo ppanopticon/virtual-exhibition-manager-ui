@@ -1,1 +1,14 @@
-<p>Exhibition: {{exhibition.name}}</p>
+
+
+
+<mat-form-field class="full-width">
+    <input disabled matInput placeholder="ID" [value]="exhibition.id">
+</mat-form-field>
+
+<mat-form-field class="full-width">
+    <input matInput placeholder="Name" [(ngModel)]="exhibition.name">
+</mat-form-field>
+
+<mat-form-field class="full-width">
+    <textarea matInput placeholder="Description" [(ngModel)]="exhibition.description"></textarea>
+</mat-form-field>

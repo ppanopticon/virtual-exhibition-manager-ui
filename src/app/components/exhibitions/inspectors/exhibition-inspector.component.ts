@@ -3,7 +3,8 @@ import {Exhibition} from '../../../model/implementations/exhibition.model';
 
 @Component({
     selector: 'app-exhibition-inspector',
-    templateUrl: './exhibition-inspector.component.html'
+    templateUrl: 'exhibition-inspector.component.html',
+    styleUrls: ['exhibition-inspector.component.scss']
 })
 export class ExhibitionInspectorComponent {
     @Input('exhibition')

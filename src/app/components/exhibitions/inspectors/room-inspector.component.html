@@ -1,0 +1,28 @@
+
+<h4 class="mat-h4">General</h4>
+
+<mat-form-field class="full-width">
+    <input matInput placeholder="Name" [(ngModel)]="room.text">
+</mat-form-field>
+
+<mat-form-field class="full-width">
+    <mat-select placeholder="Floor (Texture)" [(ngModel)]="room.floor">
+        <mat-option *ngFor="let texture of textures" [value]="texture">
+            {{texture}}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
+
+<mat-form-field class="full-width">
+    <mat-select placeholder="Ceiling (Texture)" [(ngModel)]="room.ceiling">
+        <mat-option *ngFor="let texture of textures" [value]="texture">
+            {{texture}}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
+
+<h4 class="mat-h4">Room geometry</h4>
+
+<app-vector3f-input [vector]="room.position" [name]="'Position'"></app-vector3f-input>
+<app-vector3f-input [vector]="room.entrypoint" [name]="'Entrypoint'"></app-vector3f-input>
+<app-vector3f-input [vector]="room.size" [name]="'Size'"></app-vector3f-input>
