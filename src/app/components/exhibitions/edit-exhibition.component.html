@@ -7,7 +7,7 @@
     <div class="content">
         <h1 class="mat-h1">Exhibition dashboard: {{exhibition.name}} (ID={{exhibition.shortId}})</h1>
         <div class="dashboard">
-            <div class="room-widget" *ngFor="let room of exhibition.rooms" (click)="setInspected(room)">
+            <div class="room-widget" *ngFor="let room of exhibition.rooms" (click)="inspected=room">
                 <h2 class="mat-h2">{{room.text}}</h2>
                 <mat-expansion-panel>
                     <mat-expansion-panel-header>
