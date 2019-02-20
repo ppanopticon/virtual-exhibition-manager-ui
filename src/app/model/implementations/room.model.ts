@@ -21,7 +21,7 @@ export class Room implements IRoom {
      * @param entrypoint
      * @param size
      */
-    constructor(public text: string, public ambient: string, public ceiling: string, public floor: string, public entrypoint: Vector3f, public size: Vector3f) {}
+    constructor(public text: string, public ambient: string, public ceiling: string, public floor: string, public position: Vector3f, public entrypoint: Vector3f, public size: Vector3f) {}
 
     /**
      * Copies a @type {IRoom} to a new @type {Room} object.
@@ -29,7 +29,7 @@ export class Room implements IRoom {
      * @param r IRoom object
      */
     public static copy(r: IRoom): Room {
-        const n = new Room(r.text, r.ambient, r.ceiling, r.floor, r.entrypoint, r.size);
+        const n = new Room(r.text, r.ambient, r.ceiling, r.floor, r.position, r.entrypoint, r.size);
         for (const e of r.exhibits) {
             n.exhibits.push(Exhibit.copy(e));
         }
