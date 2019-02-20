@@ -16,9 +16,7 @@ export class EditExhibitionComponent {
      *
      * @param _editor Reference to the @type EditorService
      */
-    constructor(private _editor: EditorService) {
-        this._selected = _editor.current;
-    }
+    constructor(private _editor: EditorService) {}
 
     /**
      * Getter for the @type {Exhibition}.

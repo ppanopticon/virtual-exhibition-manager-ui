@@ -58,7 +58,7 @@ export class EditorService {
             first(),
             tap(e => {
                 this._activeExhibition = Exhibition.copy(e);
-                this._selectedElement = this._activeExhibition;
+                this._inspectedElement = this._activeExhibition;
             }),
             map(e => true),
             catchError(() => of(false))
@@ -76,7 +76,7 @@ export class EditorService {
             first(),
             tap( e => {
                 this._activeExhibition = Exhibition.copy(e);
-                this._selectedElement = this._activeExhibition;
+                this._inspectedElement = this._activeExhibition;
             }),
             map(e => true),
             catchError(() => of(false))
