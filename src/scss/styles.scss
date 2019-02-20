@@ -26,3 +26,11 @@ $font-stack: 'Roboto', Arial, sans-serif;
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 @include angular-material-theme($vrem-app-theme);
+
+
+/**
+ * Make application use full height.
+ */
+html, body {
+  height: 100%;
+}
