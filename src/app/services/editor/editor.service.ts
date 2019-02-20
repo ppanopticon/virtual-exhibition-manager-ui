@@ -3,12 +3,18 @@ import {VremApiService} from '../http/vrem-api.service';
 import {Observable, of} from 'rxjs';
 import {catchError, first, map, tap} from 'rxjs/operators';
 import {Exhibition} from '../../model/implementations/exhibition.model';
+import {Exhibit} from '../../model/implementations/exhibit.model';
+import {Wall} from '../../model/implementations/wall.model';
+import {Room} from '../../model/implementations/room.model';
 
 @Injectable()
 export class EditorService {
 
     /** Reference to the currently active @type {Exhibition}. */
-    private _active: Exhibition = null;
+    private _activeExhibition: Exhibition = null;
+
+    /** Reference to the currently inspected element. May be the Exhibition, a Room, Wall or individual Exhibit. */
+    private _inspectedElement: (Exhibition | Room | Wall | Exhibit);
 
     /**
      * Default constructor.
@@ -21,15 +27,22 @@ export class EditorService {
      * Getter for the currently active {Exhibition}
      */
     get current(): (Exhibition | null) {
-        return this._active;
+        return this._activeExhibition;
+    }
+
+    /**
+     * Getter for the inspected element.
+     */
+    get inspected(): (Exhibition | Room | Wall | Exhibit) {
+        return this._inspectedElement;
     }
 
     /**
      * Getter for the ID of the currently active {Exhibition}
      */
     get currentId(): (string | null) {
-        if (this._active) {
-            return this._active.id;
+        if (this._activeExhibition) {
+            return this._activeExhibition.id;
         } else {
             return null;
         }
@@ -41,9 +54,12 @@ export class EditorService {
      * @return An Observable that returns true on success and false otherwise.
      */
     public save(): Observable<boolean> {
-        return this._api.save(this._active).pipe(
+        return this._api.save(this._activeExhibition).pipe(
             first(),
-            tap(e => this._active = Exhibition.copy(e)),
+            tap(e => {
+                this._activeExhibition = Exhibition.copy(e);
+                this._selectedElement = this._activeExhibition;
+            }),
             map(e => true),
             catchError(() => of(false))
         );
@@ -58,7 +74,10 @@ export class EditorService {
     public load(id: string): Observable<boolean> {
         return this._api.load(id).pipe(
             first(),
-            tap( e => this._active = Exhibition.copy(e)),
+            tap( e => {
+                this._activeExhibition = Exhibition.copy(e);
+                this._selectedElement = this._activeExhibition;
+            }),
             map(e => true),
             catchError(() => of(false))
         );
@@ -70,8 +89,8 @@ export class EditorService {
      * @return An Observable that returns true on success and false otherwise.
      */
     public reload(): Observable<boolean> {
-        if (this._active) {
-            return this.load(this._active.id);
+        if (this._activeExhibition) {
+            return this.load(this._activeExhibition.id);
         } else {
             return of(false);
         }

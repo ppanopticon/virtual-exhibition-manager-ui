@@ -1,7 +1,7 @@
 <mat-drawer-container class="container" autosize>
     <mat-drawer class="inspector" position="end" mode="side" opened>
         <h1 class="mat-h1">Inspector: {{selectedType}}</h1>
-        <app-exhibition-inspector *ngIf="isSelectedExhibition" [exhibition]="selected"></app-exhibition-inspector>
+        <app-exhibition-inspector *ngIf="isSelectedExhibition" [exhibition]="inspected"></app-exhibition-inspector>
     </mat-drawer>
     <div class="content">
         <h1 class="mat-h1">Exhibition dashboard: {{exhibition.name}} (ID={{exhibition.shortId}})</h1>
