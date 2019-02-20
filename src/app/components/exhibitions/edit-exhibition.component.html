@@ -2,25 +2,13 @@
     <mat-drawer class="inspector" position="end" mode="side" opened>
         <h1 class="mat-h1">Inspector: {{selectedType}}</h1>
         <app-exhibition-inspector *ngIf="isSelectedExhibition" [exhibition]="inspected"></app-exhibition-inspector>
+        <app-room-inspector *ngIf="isSelectedRoom" [room]="inspected"></app-room-inspector>
     </mat-drawer>
     <div class="content">
         <h1 class="mat-h1">Exhibition dashboard: {{exhibition.name}} (ID={{exhibition.shortId}})</h1>
         <div class="dashboard">
-            <div class="room-widget" *ngFor="let room of exhibition.rooms">
-
+            <div class="room-widget" *ngFor="let room of exhibition.rooms" (click)="setInspected(room)">
                 <h2 class="mat-h2">{{room.text}}</h2>
-
-                <!-- General settings regarding the room -->
-                <mat-expansion-panel>
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            Properties
-                        </mat-panel-title>
-                        <mat-panel-description>
-                        </mat-panel-description>
-                    </mat-expansion-panel-header>
-                </mat-expansion-panel>
-
                 <mat-expansion-panel>
                     <mat-expansion-panel-header>
                         <mat-panel-title>

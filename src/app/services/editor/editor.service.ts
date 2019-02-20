@@ -38,6 +38,15 @@ export class EditorService {
     }
 
     /**
+     * Setter for the inspected element.
+     *
+     * @param value The new inspected element.
+     */
+    set inspected(value: (Exhibition | Room | Wall | Exhibit)) {
+        this._inspectedElement = value;
+    }
+
+    /**
      * Getter for the ID of the currently active {Exhibition}
      */
     get currentId(): (string | null) {

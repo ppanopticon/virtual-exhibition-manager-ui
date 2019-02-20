@@ -33,6 +33,15 @@ export class EditExhibitionComponent {
     }
 
     /**
+     * Setter for the inspected element.
+     *
+     * @param element New inspected element.
+     */
+    set inspected(element: (Exhibition | Room | Wall | Exhibit)) {
+        this._editor.inspected = element;
+    }
+
+    /**
      * Returns the name of type of the currently inspected element.
      *
      * @return Type of the inspected element.
@@ -50,7 +59,6 @@ export class EditExhibitionComponent {
             return 'Nothing';
         }
     }
-
 
     /**
      *
