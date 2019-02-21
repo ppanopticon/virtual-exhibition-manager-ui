@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {EditorService} from '../../services/editor/editor.service';
 import {Exhibition} from '../../model/implementations/exhibition.model';
 import {Room} from '../../model/implementations/room.model';
@@ -14,20 +14,26 @@ import {MatTreeNestedDataSource} from '@angular/material';
     templateUrl: 'edit-exhibition.component.html',
     styleUrls: ['edit-exhibition.component.scss']
 })
-export class EditExhibitionComponent implements OnInit, OnDestroy {
+export class EditExhibitionComponent {
 
-    public treeControl = new NestedTreeControl<RoomNode>(node => node.children);
+    /** The {NestedTreeControl} for the per-room tree list. */
+    private _treeControl = new NestedTreeControl<RoomNode>(node => node.children);
 
-    /** */
-    public roomDataSources: Observable<Map<Room, MatTreeNestedDataSource<RoomNode>>>;
+    /** The data source for the per-room tree list. */
+    private _roomDataSources: Observable<Map<Room, MatTreeNestedDataSource<RoomNode>>>;
+
+    /** Helper functions to render the tree list. */
+    public readonly isFiller = (_: number, node: RoomNode) => !node.payload;
+    public readonly isWall = (_: number, node: RoomNode) => !!node.payload && node.payload instanceof Wall;
+    public readonly isExhibit = (_: number, node: RoomNode) => !!node.payload && node.payload instanceof Exhibit;
 
     /**
      * Default constructor.
      *
-     * @param _editor Reference to the @type EditorService
+     * @param _editor Reference to the {EditorService}
      */
     constructor(private _editor: EditorService) {
-        this.roomDataSources = this._editor.currentObservable.pipe(
+        this._roomDataSources = this._editor.currentObservable.pipe(
             map( e =>  {
                 const rooms = new Map();
                 e.rooms.forEach(r => rooms.set(r, this.hierarchy(r)));
@@ -35,7 +41,6 @@ export class EditExhibitionComponent implements OnInit, OnDestroy {
             })
         );
     }
-
 
     /**
      * Getter for the @type {Exhibition}.
@@ -49,6 +54,20 @@ export class EditExhibitionComponent implements OnInit, OnDestroy {
      */
     get inspected(): Observable<(Exhibition | Room | Wall | Exhibit)> {
         return this._editor.inspectedObservable;
+    }
+
+    /**
+     * Getter for the per room data source.
+     */
+    get roomDataSources(): Observable<Map<Room, MatTreeNestedDataSource<RoomNode>>> {
+        return this._roomDataSources;
+    }
+
+    /**
+     * Getter for the tree control.
+     */
+    get treeControl(): NestedTreeControl<RoomNode> {
+        return this._treeControl;
     }
 
     /**
@@ -77,33 +96,10 @@ export class EditExhibitionComponent implements OnInit, OnDestroy {
                 name: `3D exhibits (${r.exhibits.length})`,
                 children:  r.exhibits.map(e => {
                     return <RoomNode>{name: e.name, payload: e, children: []};
-                });
+                })
             }
-        ]
+        ];
     }
-
-
-    /**
-     *
-     * @param _
-     * @param node
-     */
-    public isFiller = (_: number, node: RoomNode) => !node.payload;
-
-    /**
-     *
-     * @param _
-     * @param node
-     */
-    public isWall = (_: number, node: RoomNode) => !!node.payload && node.payload instanceof Wall;
-
-    /**
-     *
-     * @param _
-     * @param node
-     */
-    public isExhibit = (_: number, node: RoomNode) => !!node.payload && node.payload instanceof Exhibit;
-
 
     /**
      * Returns the name of type of the currently inspected element.
@@ -125,7 +121,7 @@ export class EditExhibitionComponent implements OnInit, OnDestroy {
                     return 'Nothing';
                 }
             })
-        )
+        );
     }
 
     /**
