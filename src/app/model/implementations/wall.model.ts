@@ -35,6 +35,35 @@ export class Wall implements IWall {
     }
 
     /**
+     * The width of this {Wall}. Only defined, if it belongs to a {Room}.
+     */
+    get width() {
+        if (this._belongsTo) {
+            switch (this.direction) {
+                case 'NORTH':
+                case 'SOUTH':
+                    return this._belongsTo.size.x;
+                case 'WEST':
+                case 'EAST':
+                    return this._belongsTo.size.z;
+            }
+        } else {
+            return Number.NaN;
+        }
+    }
+
+    /**
+     * The height of this {Wall}. Only defined, if it belongs to a {Room}.
+     */
+    get height() {
+        if (this._belongsTo) {
+            return this._belongsTo.size.y;
+        } else {
+            return Number.NaN;
+        }
+    }
+
+    /**
      * Returns this {Wall}'s designation.
      */
     get designation() {

@@ -3,6 +3,7 @@
         <h1 class="mat-h1">Inspector: {{selectedType}}</h1>
         <app-exhibition-inspector *ngIf="isSelectedExhibition" [exhibition]="inspected"></app-exhibition-inspector>
         <app-room-inspector *ngIf="isSelectedRoom" [room]="inspected"></app-room-inspector>
+        <app-wall-inspector *ngIf="isSelectedWall" [wall]="inspected"></app-wall-inspector>
     </mat-drawer>
     <div class="content" (click)="exhibitionClicked($event, exhibition)">
         <h1 class="mat-h1">Exhibition dashboard: {{exhibition.name}} (ID={{exhibition.shortId}})</h1>

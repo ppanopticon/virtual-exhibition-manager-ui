@@ -6,10 +6,12 @@ import {FormsModule} from '@angular/forms';
 import {RoomInspectorComponent} from './room/room-inspector.component';
 import {SharedComponentsModule} from '../../shared/shared-components.module';
 import {RoomCanvasComponent} from './room/room-canvas.component';
+import {WallInspectorComponent} from './wall/wall-inspector.component';
+import {WallCanvasComponent} from './wall/wall-canvas.component';
 
 @NgModule({
-    declarations: [ ExhibitionInspectorComponent, RoomInspectorComponent, RoomCanvasComponent ],
+    declarations: [ ExhibitionInspectorComponent, RoomInspectorComponent, RoomCanvasComponent, WallInspectorComponent, WallCanvasComponent ],
     imports: [ BrowserModule, MaterialModule, FormsModule, SharedComponentsModule ],
-    exports: [ ExhibitionInspectorComponent, RoomInspectorComponent ]
+    exports: [ ExhibitionInspectorComponent, RoomInspectorComponent, WallInspectorComponent ]
 })
 export class InspectorModule {}
