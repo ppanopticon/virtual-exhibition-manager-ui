@@ -46,6 +46,9 @@ export class VremApiService extends RestfulService {
      * @return Observable<IExhibition>
      */
     public save(exhibition: IExhibition): Observable<IExhibition> {
-        return this.post<IExhibition>('exhibitions/save', JSON.stringify(exhibition), null);
+        return this.post<IExhibition>('exhibitions/save', JSON.stringify(exhibition, (key, value) => {
+            if (key === '_belongsTo') return undefined;
+            else return value;
+        }), null);
     }
 }
