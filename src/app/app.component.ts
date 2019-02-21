@@ -5,7 +5,7 @@ import {ExhibitionSummary} from './model/interfaces/exhibition/exhibition-summar
 import {Router, RoutesRecognized} from '@angular/router';
 import {flatMap, share} from 'rxjs/operators';
 import {EditorService} from './services/editor/editor.service';
-import {MatSnackBar} from '@angular/material';
+import {MatSnackBar, MatSnackBarConfig} from '@angular/material';
 
 @Component({
   selector: 'app-root',
@@ -72,9 +72,9 @@ export class AppComponent {
   public handleSaveClick() {
     this._editor.save().subscribe(s => {
       if (s) {
-        this._snackBar.open(`Exhibition '${this.title}' saved successfully!`);
+        this._snackBar.open(`Exhibition '${this.title}' saved successfully!`, null, <MatSnackBarConfig>{duration : 2500});
       } else {
-        this._snackBar.open(`Failed to save exhibition '${this.title}'!`);
+        this._snackBar.open(`Failed to save exhibition '${this.title}'!`, null,  <MatSnackBarConfig>{duration : 2500});
       }
     });
   }
@@ -85,9 +85,9 @@ export class AppComponent {
   public handleReloadClick() {
     this._editor.reload().subscribe(s => {
         if (s) {
-          this._snackBar.open(`Exhibition '${this.title}' reloaded successfully!`);
+          this._snackBar.open(`Exhibition '${this.title}' reloaded successfully!`, null, <MatSnackBarConfig>{duration : 2500});
         } else {
-          this._snackBar.open('Failed to reload exhibition!');
+          this._snackBar.open('Failed to reload exhibition!', null, <MatSnackBarConfig>{duration : 2500});
         }
     });
   }
