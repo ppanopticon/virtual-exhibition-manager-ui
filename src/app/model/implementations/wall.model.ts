@@ -34,6 +34,14 @@ export class Wall implements IWall {
         return n;
     }
 
+
+    /**
+     * Getter for the number of {Exhibit}s.
+     */
+    get numberOfExhibits() {
+        return this.exhibits.length;
+    }
+
     /**
      * The width of this {Wall}. Only defined, if it belongs to a {Room}.
      */

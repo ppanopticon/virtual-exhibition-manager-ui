@@ -6,13 +6,19 @@
 <h4 class="mat-h4">General properties</h4>
 
 <mat-form-field class="full-width">
-    <input matInput disabled placeholder="Name" [value]="wall.designation">
+    <input matInput disabled placeholder="Name" [value]="wall.designation"  matTooltip="Designation of the wall (cannot be changed).">
 </mat-form-field>
 
 <mat-form-field class="full-width">
-    <mat-select placeholder="Texture" [(ngModel)]="wall.texture">
+    <input matInput disabled placeholder="Exhibits" [value]="wall.numberOfExhibits" type="number" matTooltip="Number of exhibits on the wall.">
+</mat-form-field>
+
+<mat-form-field class="full-width">
+    <mat-select placeholder="Texture" [(ngModel)]="wall.texture" matTooltip="The texture of the wall.">
         <mat-option *ngFor="let texture of textures" [value]="texture">
             {{texture}}
         </mat-option>
     </mat-select>
 </mat-form-field>
+
+<app-vector3f-input [vector]="wall.color" [name]="'Color (RGB)'"></app-vector3f-input>
