@@ -4,6 +4,7 @@ import {Exhibition} from '../../model/implementations/exhibition.model';
 import {Room} from '../../model/implementations/room.model';
 import {Wall} from '../../model/implementations/wall.model';
 import {Exhibit} from '../../model/implementations/exhibit.model';
+import {IRoom} from '../../model/interfaces/room/room.interface';
 
 @Component({
     selector: 'app-edit-exhibitions',
@@ -86,5 +87,35 @@ export class EditExhibitionComponent {
      */
     get isSelectedExhibit() {
         return this.inspected instanceof Exhibit;
+    }
+
+    /**
+     * Called whenever a user clicks a {Exhibition}.
+     * @param event The mouse event.
+     * @param exhibition The {Exhibition} that has been clicked.
+     */
+    public exhibitionClicked(event: MouseEvent, exhibition: Exhibition) {
+        this._editor.inspected = exhibition;
+        event.stopPropagation();
+    }
+
+    /**
+     * Called whenever a user clicks a {Room}.
+     * @param event The mouse event.
+     * @param room The {Room} that has been clicked.
+     */
+    public roomClicked(event: MouseEvent, room: Room) {
+        this._editor.inspected = room;
+        event.stopPropagation();
+    }
+
+    /**
+     * Called whenever a user clicks a {Wall}.
+     * @param event The mouse event.
+     * @param wall The {Wall} that has been clicked.
+     */
+    public wallClicked(event: MouseEvent, wall: Wall) {
+        this._editor.inspected = wall;
+        event.stopPropagation();
     }
 }

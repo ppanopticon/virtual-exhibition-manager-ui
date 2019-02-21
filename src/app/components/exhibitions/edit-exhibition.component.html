@@ -4,22 +4,17 @@
         <app-exhibition-inspector *ngIf="isSelectedExhibition" [exhibition]="inspected"></app-exhibition-inspector>
         <app-room-inspector *ngIf="isSelectedRoom" [room]="inspected"></app-room-inspector>
     </mat-drawer>
-    <div class="content">
+    <div class="content" (click)="exhibitionClicked($event, exhibition)">
         <h1 class="mat-h1">Exhibition dashboard: {{exhibition.name}} (ID={{exhibition.shortId}})</h1>
         <div class="dashboard">
-            <div class="room-widget" *ngFor="let room of exhibition.rooms" (click)="inspected=room">
+            <div *ngFor="let room of exhibition.rooms" (click)="roomClicked($event, room)" [className]="inspected==room ? 'room-widget selected' : 'room-widget'">
                 <h2 class="mat-h2">{{room.text}}</h2>
-                <mat-expansion-panel>
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            Walls ({{room.walls.length}})
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-
+                    <h3 class="mat-h3">Walls ({{room.walls.length}})</h3>
                     <mat-list>
-                        <mat-list-item *ngFor="let wall of room.walls">{{wall.direction}}</mat-list-item>
+                        <mat-list-item *ngFor="let wall of room.walls" (click)="wallClicked($event, wall)"  [className]="inspected==wall ? 'mat-list-item selected' : 'mat-list-item '">
+                            {{wall.direction}}
+                        </mat-list-item>
                     </mat-list>
-                </mat-expansion-panel>
 
                 <mat-expansion-panel>
                     <mat-expansion-panel-header>
