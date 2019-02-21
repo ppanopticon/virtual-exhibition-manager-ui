@@ -1,5 +1,5 @@
-import {AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {IRoom} from '../../../../model/interfaces/room/room.interface';
+import {AfterViewInit, Component, ElementRef, Input, ViewChild} from '@angular/core';
+import {Room} from '../../../../model/implementations/room.model';
 
 @Component({
     selector: 'app-room-canvas',
@@ -19,7 +19,7 @@ export class RoomCanvasComponent implements AfterViewInit {
 
     /** The room displayed by this {RoomCanvasComponent}. */
     @Input('room')
-    private _room: IRoom;
+    private _room: Room;
 
     /** The canvas used to draw the {Room} overview. */
     @ViewChild('canvas')
