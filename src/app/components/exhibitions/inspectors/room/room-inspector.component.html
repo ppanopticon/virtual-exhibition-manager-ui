@@ -6,8 +6,13 @@
 
 <h4 class="mat-h4">General properties</h4>
 
+
 <mat-form-field class="full-width">
-    <input matInput placeholder="Name" [(ngModel)]="room.text">
+    <input matInput placeholder="Exhibition" [value]="room._belongsTo.name" disabled>
+</mat-form-field>
+
+<mat-form-field class="full-width">
+    <input matInput placeholder="Room name" [(ngModel)]="room.text">
 </mat-form-field>
 
 <mat-form-field class="full-width">
