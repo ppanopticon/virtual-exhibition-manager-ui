@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
-import {Room} from '../../../model/implementations/room.model';
-import {Textures} from '../../../model/interfaces/general/textures.model';
+import {Room} from '../../../../model/implementations/room.model';
+import {Textures} from '../../../../model/interfaces/general/textures.model';
 
 @Component({
     selector: 'app-room-inspector',
