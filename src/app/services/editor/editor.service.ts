@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {VremApiService} from '../http/vrem-api.service';
-import {Observable, of} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {catchError, first, map, tap} from 'rxjs/operators';
 import {Exhibition} from '../../model/implementations/exhibition.model';
 import {Exhibit} from '../../model/implementations/exhibit.model';
@@ -11,10 +11,10 @@ import {Room} from '../../model/implementations/room.model';
 export class EditorService {
 
     /** Reference to the currently active @type {Exhibition}. */
-    private _activeExhibition: Exhibition = null;
+    private _activeExhibition: BehaviorSubject<Exhibition> = new BehaviorSubject(null);
 
     /** Reference to the currently inspected element. May be the Exhibition, a Room, Wall or individual Exhibit. */
-    private _inspectedElement: (Exhibition | Room | Wall | Exhibit);
+    private _inspectedElement: BehaviorSubject<(Exhibition | Room | Wall | Exhibit)> = new BehaviorSubject(null);
 
     /**
      * Default constructor.
@@ -27,14 +27,32 @@ export class EditorService {
      * Getter for the currently active {Exhibition}
      */
     get current(): (Exhibition | null) {
-        return this._activeExhibition;
+        return this._activeExhibition.value;
+    }
+
+    /**
+     * Returns an {Observable} of the inspected element.
+     *
+     * @return {Observable<Exhibition>}
+     */
+    get currentObservable(): Observable<Exhibition> {
+        return this._activeExhibition.asObservable();
     }
 
     /**
      * Getter for the inspected element.
      */
     get inspected(): (Exhibition | Room | Wall | Exhibit) {
-        return this._inspectedElement;
+        return this._inspectedElement.value;
+    }
+
+    /**
+     * Returns an {Observable} of the inspected element.
+     *
+     * @return {Observable<(Exhibition | Room | Wall | Exhibit)>}
+     */
+    get inspectedObservable(): Observable<(Exhibition | Room | Wall | Exhibit)> {
+        return this._inspectedElement.asObservable();
     }
 
     /**
@@ -43,15 +61,15 @@ export class EditorService {
      * @param value The new inspected element.
      */
     set inspected(value: (Exhibition | Room | Wall | Exhibit)) {
-        this._inspectedElement = value;
+        this._inspectedElement.next(value);
     }
 
     /**
      * Getter for the ID of the currently active {Exhibition}
      */
     get currentId(): (string | null) {
-        if (this._activeExhibition) {
-            return this._activeExhibition.id;
+        if (this._activeExhibition.value) {
+            return this._activeExhibition.value.id;
         } else {
             return null;
         }
@@ -63,11 +81,10 @@ export class EditorService {
      * @return An Observable that returns true on success and false otherwise.
      */
     public save(): Observable<boolean> {
-        return this._api.save(this._activeExhibition).pipe(
+        return this._api.save(this._activeExhibition.value).pipe(
             first(),
             tap(e => {
-                this._activeExhibition = Exhibition.copy(e);
-                this._inspectedElement = this._activeExhibition;
+                this._activeExhibition.next(Exhibition.copy(e));
             }),
             map(e => true),
             catchError(() => of(false))
@@ -84,8 +101,7 @@ export class EditorService {
         return this._api.load(id).pipe(
             first(),
             tap( e => {
-                this._activeExhibition = Exhibition.copy(e);
-                this._inspectedElement = this._activeExhibition;
+                this._activeExhibition.next(Exhibition.copy(e));
             }),
             map(e => true),
             catchError(() => of(false))
@@ -99,7 +115,7 @@ export class EditorService {
      */
     public reload(): Observable<boolean> {
         if (this._activeExhibition) {
-            return this.load(this._activeExhibition.id);
+            return this.load(this._activeExhibition.value.id);
         } else {
             return of(false);
         }
