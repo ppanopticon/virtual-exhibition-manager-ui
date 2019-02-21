@@ -32,7 +32,9 @@ export class Exhibition implements IExhibition {
     public static copy(e: IExhibition): Exhibition {
         const n =  new Exhibition(e.id, e.name, e.description);
         for (const r of e.rooms) {
-            n.rooms.push(Room.copy(r));
+            const rc = Room.copy(r);
+            rc._belongsTo = n;
+            n.rooms.push(rc);
         }
         return n;
     }

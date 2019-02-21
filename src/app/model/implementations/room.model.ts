@@ -2,6 +2,7 @@ import {IRoom} from '../interfaces/room/room.interface';
 import {Vector3f} from '../interfaces/general/vector-3f.model';
 import {Wall} from './wall.model';
 import {Exhibit} from './exhibit.model';
+import {Exhibition} from './exhibition.model';
 
 export class Room implements IRoom {
 
@@ -10,6 +11,9 @@ export class Room implements IRoom {
 
     /** List of @type {Wall}s that make up this @type {Room}. */
     public readonly walls: Wall[] = [];
+
+    /** Reference to the {Exhibition} this {Room} belongs to. */
+    public _belongsTo: (Exhibition | null);
 
     /**
      * Default constructor for @type {Room}.
@@ -31,10 +35,14 @@ export class Room implements IRoom {
     public static copy(r: IRoom): Room {
         const n = new Room(r.text, r.ambient, r.ceiling, r.floor, r.position, r.entrypoint, r.size);
         for (const e of r.exhibits) {
-            n.exhibits.push(Exhibit.copy(e));
+            const ec = Exhibit.copy(e);
+            ec._belongsTo = n;
+            n.exhibits.push(ec);
         }
         for (const w of r.walls) {
-            n.walls.push(Wall.copy(w));
+            const wc = Wall.copy(w);
+            wc._belongsTo = n;
+            n.walls.push(wc);
         }
         return n;
     }
