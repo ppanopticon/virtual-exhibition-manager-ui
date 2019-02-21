@@ -1,0 +1,31 @@
+
+<img src="{{service.urlForContent(exhibit.path)}}" style="max-width: 250px; max-height: 250px; margin: 0 auto;" />
+
+<hr/>
+
+<h4 class="mat-h4">General properties</h4>
+
+<mat-form-field class="full-width">
+    <input matInput placeholder="Type" [value]="exhibit.type" disabled/>
+</mat-form-field>
+
+<mat-form-field class="full-width">
+    <input matInput placeholder="Title/Name" [(ngModel)]="exhibit.name"/>
+</mat-form-field>
+
+<mat-form-field class="full-width">
+    <textarea matInput placeholder="Description" [(ngModel)]="exhibit.description"></textarea>
+</mat-form-field>
+
+<h4 class="mat-h4">Size & Position</h4>
+
+<div class="full-width">
+    <app-vector3f-input *ngIf="exhibit.type == 'IMAGE' || exhibit.type == 'IMAGE'" [vector]="exhibit.size" [name]="'Size'" [show]="[true, true, false]" [disabled]="true">
+    </app-vector3f-input>
+</div>
+<div class="full-width">
+    <app-vector3f-input class="full-width"  *ngIf="exhibit.type == 'IMAGE' || exhibit.type == 'IMAGE'" [vector]="exhibit.position" [name]="'Position'" [show]="[true, true, false]">
+    </app-vector3f-input>
+</div>
+
+<mat-slide-toggle [(ngModel)]="exhibit.light">Add light</mat-slide-toggle>

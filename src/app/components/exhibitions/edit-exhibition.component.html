@@ -4,6 +4,8 @@
         <app-exhibition-inspector *ngIf="(isSelectedExhibition|async)" [exhibition]="(inspected|async)"></app-exhibition-inspector>
         <app-room-inspector *ngIf="(isSelectedRoom|async)" [room]="(inspected|async)"></app-room-inspector>
         <app-wall-inspector *ngIf="(isSelectedWall|async)" [wall]="(inspected|async)"></app-wall-inspector>
+        <app-exhibit-inspector *ngIf="(isSelectedExhibit|async)" [exhibit]="(inspected|async)"></app-exhibit-inspector>
+
     </mat-drawer>
     <div class="content" *ngIf="!!(exhibition|async)" (click)="exhibitionClicked($event)">
         <h1 class="mat-h1">Exhibition dashboard: {{(exhibition|async).name}} (ID={{(exhibition|async).shortId}})</h1>
@@ -51,8 +53,6 @@
                             <p>Exhibit: {{node.payload.name}}</p>
                         </div>
                     </mat-tree-node>
-
-
                 </mat-tree>
             </div>
         </div>

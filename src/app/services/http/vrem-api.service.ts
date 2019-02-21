@@ -38,6 +38,13 @@ export class VremApiService extends RestfulService {
         return this.get<IExhibition>('exhibitions/load/' + id).pipe(first());
     }
 
+    /**
+     *
+     * @param content
+     */
+    public urlForContent(content: string) {
+        return this.resolve('content/get/' + encodeURIComponent(content));
+    }
 
     /**
      * Uses the API to save a specific @type {Exhibition}s and returns the saved version.

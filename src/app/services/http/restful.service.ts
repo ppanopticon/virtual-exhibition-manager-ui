@@ -57,7 +57,7 @@ export class RestfulService {
      * @param {string} service  The path to the service.
      * @return {string} Full URL to the service.
      */
-    private resolve(service: string): string {
+    public resolve(service: string): string {
         return this._endpoint + service;
     }
 }
