@@ -5,15 +5,29 @@
         <app-room-inspector *ngIf="(isSelectedRoom|async)" [room]="(inspected|async)"></app-room-inspector>
         <app-wall-inspector *ngIf="(isSelectedWall|async)" [wall]="(inspected|async)"></app-wall-inspector>
         <app-exhibit-inspector *ngIf="(isSelectedExhibit|async)" [exhibit]="(inspected|async)"></app-exhibit-inspector>
-
     </mat-drawer>
     <div class="content" *ngIf="!!(exhibition|async)" (click)="exhibitionClicked($event)">
         <h1 class="mat-h1">Exhibition dashboard: {{(exhibition|async).name}} (ID={{(exhibition|async).shortId}})</h1>
+
+        <div>
+            <button mat-stroked-button color="primary" (click)="addNewRoom()">
+                <mat-icon>add</mat-icon>
+                Add new room
+            </button>
+        </div>
+
+
         <div class="dashboard">
             <div *ngFor="let room of (exhibition|async).rooms" (click)="roomClicked($event, room)" [className]="(inspected|async)==room ? 'room-widget selected' : 'room-widget'">
-                <h2 class="mat-h2">{{room.text}}</h2>
-                <mat-tree [dataSource]="(roomDataSources|async).get(room)" [treeControl]="treeControl" class="room-tree">
 
+                <div [style.display]="'flex'" [style.justify-content]="'space-between'">
+                    <h2 class="mat-h2">{{room.text}}</h2>
+                    <button mat-mini-fab color="warn" matTooltip="Delete room '{{room.text}}' from exhibition." (click)="deleteRoom(room)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+
+                <mat-tree [dataSource]="(roomDataSources|async).get(room)" [treeControl]="treeControl" class="room-tree">
 
                     <mat-nested-tree-node *matTreeNodeDef="let node; when: isFiller">
                         <li>

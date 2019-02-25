@@ -10,6 +10,21 @@ export class Exhibition implements IExhibition {
     public readonly rooms: Room[] = [];
 
     /**
+     * Copies a @type {IExhibition} to a new @type {Exhibition} object.
+     *
+     * @param e IExhibition object
+     */
+    public static copy(e: IExhibition): Exhibition {
+        const n =  new Exhibition(e.id, e.name, e.description);
+        for (const r of e.rooms) {
+            const rc = Room.copy(r);
+            rc._belongsTo = n;
+            n.rooms.push(rc);
+        }
+        return n;
+    }
+
+    /**
      *
      * @param id
      * @param name
@@ -25,17 +40,31 @@ export class Exhibition implements IExhibition {
     }
 
     /**
-     * Copies a @type {IExhibition} to a new @type {Exhibition} object.
+     * Adds a copy of the provided {Room} to this {Exhibition}
      *
-     * @param e IExhibition object
+     * @param r The {Room} to delete OR the index of the {Room} to delete.
+     * @return true on success, false otherwise.
      */
-    public static copy(e: IExhibition): Exhibition {
-        const n =  new Exhibition(e.id, e.name, e.description);
-        for (const r of e.rooms) {
-            const rc = Room.copy(r);
-            rc._belongsTo = n;
-            n.rooms.push(rc);
+    public addRoom(r: Room) {
+        this.rooms.push(r);
+        r._belongsTo = this;
+    }
+
+    /**
+     * Delete the provided {Room} from this {Exhibition}
+     *
+     * @param r The {Room} to delete OR the index of the {Room} to delete.
+     * @return true on success, false otherwise.
+     */
+    public deleteRoom(r: (Room | number)) {
+        if (r instanceof Room) {
+            r = this.rooms.indexOf(r);
         }
-        return n;
+        if (r > -1 && r < this.rooms.length) {
+            this.rooms.splice(r, 1);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

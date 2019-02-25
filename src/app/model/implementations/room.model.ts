@@ -3,6 +3,7 @@ import {Vector3f} from '../interfaces/general/vector-3f.model';
 import {Wall} from './wall.model';
 import {Exhibit} from './exhibit.model';
 import {Exhibition} from './exhibition.model';
+import {Directions} from '../interfaces/room/direction.model';
 
 export class Room implements IRoom {
 
@@ -14,18 +15,6 @@ export class Room implements IRoom {
 
     /** Reference to the {Exhibition} this {Room} belongs to. */
     public _belongsTo: (Exhibition | null);
-
-    /**
-     * Default constructor for @type {Room}.
-     *
-     * @param text
-     * @param ambient
-     * @param ceiling
-     * @param floor
-     * @param entrypoint
-     * @param size
-     */
-    constructor(public text: string, public ambient: string, public ceiling: string, public floor: string, public position: Vector3f, public entrypoint: Vector3f, public size: Vector3f) {}
 
     /**
      * Copies a @type {IRoom} to a new @type {Room} object.
@@ -46,4 +35,29 @@ export class Room implements IRoom {
         }
         return n;
     }
+
+    /**
+     * Creates and returns an empty {Room}
+     */
+    public static empty(): Room {
+        const room = new Room('Empty room', null, 'NWood', 'NWood', <Vector3f>{x: 0.0, y: 0.0, z: 0.0}, <Vector3f>{x: 1.0, y: 0.0, z: 1.0}, <Vector3f>{x: 5.0, y: 5.0, z: 5.0});
+        for (const d of Directions) {
+            const w = new Wall(d, <Vector3f>{x: 0.0, y: 0.0, z: 0.0}, 'NBricks');
+            room.walls.push(w);
+            w._belongsTo = room;
+        }
+        return room;
+    }
+
+    /**
+     * Default constructor for @type {Room}.
+     *
+     * @param text
+     * @param ambient
+     * @param ceiling
+     * @param position
+     * @param entrypoint
+     * @param size
+     */
+    constructor(public text: string, public ambient: string, public ceiling: string, public floor: string, public position: Vector3f, public entrypoint: Vector3f, public size: Vector3f) {}
 }

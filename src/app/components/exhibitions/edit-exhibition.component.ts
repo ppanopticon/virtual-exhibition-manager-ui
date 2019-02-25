@@ -71,6 +71,22 @@ export class EditExhibitionComponent {
     }
 
     /**
+     * Creates and adds a new {Room} to the current {Exhibition}.
+     */
+    public addNewRoom() {
+        this._editor.current.addRoom(Room.empty())
+    }
+
+    /**
+     * Deletes the provided {Room} from the current {Exhibition}
+     *
+     * @param r The {Room} to delete.
+     */
+    public deleteRoom(r: Room): void {
+        this._editor.current.deleteRoom(r);
+    }
+
+    /**
      * Hierarchy for displaying the tree list per room.
      *
      * @param r The room for which to return the hierarchy.

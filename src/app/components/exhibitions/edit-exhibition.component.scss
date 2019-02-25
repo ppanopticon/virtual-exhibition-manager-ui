@@ -15,8 +15,8 @@
 }
 
 .dashboard {
-  width: 80%;
   display: flex;
+  flex-flow: row wrap;
   justify-content: flex-start;
 }
 
