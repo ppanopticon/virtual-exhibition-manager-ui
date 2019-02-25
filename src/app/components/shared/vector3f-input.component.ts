@@ -5,13 +5,13 @@ import {Vector3f} from '../../model/interfaces/general/vector-3f.model';
     selector: 'app-vector3f-input',
     template: `
         <mat-form-field [style.width]="size" *ngIf="show[0]">
-            <input matInput placeholder="{{name}} (x)" type="number" [(ngModel)]="vector.x" [disabled]="disabled">
+            <input matInput placeholder="{{labels[0] != null ? labels[0] : name + ' (x)'}}" type="number" [(ngModel)]="vector.x" [disabled]="disabled">
         </mat-form-field>
         <mat-form-field [style.width]="size" *ngIf="show[1]">
-            <input matInput placeholder="{{name}} (y)" type="number" [(ngModel)]="vector.y" [disabled]="disabled">
+            <input matInput placeholder="{{labels[1] != null ? labels[1] : name + ' (y)'}}" type="number" [(ngModel)]="vector.y" [disabled]="disabled">
         </mat-form-field>
         <mat-form-field [style.width]="size" *ngIf="show[2]">
-            <input matInput placeholder="{{name}} (z)" type="number" [(ngModel)]="vector.z" [disabled]="disabled">
+            <input matInput placeholder="{{labels[2] != null ? labels[2] : name + ' (z)'}}" type="number" [(ngModel)]="vector.z" [disabled]="disabled">
         </mat-form-field>
     `
 })
@@ -31,6 +31,10 @@ export class Vector3fInputComponent {
     @Input('show')
     private _show: boolean[] = [true, true, true];
 
+    /** Custom labels to use with this Vector3fInputComponent. */
+    @Input('labels')
+    private _labels: string[] = [null, null, null];
+
     /**
      * Getter for the show array.
      */
@@ -43,6 +47,13 @@ export class Vector3fInputComponent {
      */
     get size() {
         return Math.floor((100/this.show.filter(v => v === true).length)) + '%';
+    }
+
+    /**
+     * Getter for the custom labels.
+     */
+    get labels() {
+        return this._labels;
     }
 
     /**
