@@ -1,6 +1,7 @@
 
-
-<app-room-canvas [room]="room" ></app-room-canvas>
+<div class="full-width" [style.display]="'flex'" [style.justify-content]="'space-around'">
+    <app-room-canvas [room]="room" ></app-room-canvas>
+</div>
 
 <hr/>
 
@@ -34,5 +35,8 @@
 <h4 class="mat-h4">Room geometry</h4>
 
 <app-vector3f-input [vector]="room.position" [name]="'Position'"></app-vector3f-input>
-<app-vector3f-input [vector]="room.entrypoint" [name]="'Entrypoint'"></app-vector3f-input>
-<app-vector3f-input [vector]="room.size" [name]="'Size'"></app-vector3f-input>
+
+<app-vector3f-input [vector]="room.size" [name]="'Size'" [labels]="['Width', 'Height', 'Depth']"></app-vector3f-input>
+
+<h4 class="mat-h4">Entrypoint</h4>
+<app-vector3f-input [vector]="room.entrypoint" [name]="'Entrypoint'" [show]="[true, false, true]" [labels]="['Entrypoint (x)', null, 'Entrypoint (y)']"></app-vector3f-input>
