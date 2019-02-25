@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {Wall} from '../../../../model/implementations/wall.model';
 import {VremApiService} from '../../../../services/http/vrem-api.service';
 
@@ -16,7 +16,7 @@ import {VremApiService} from '../../../../services/http/vrem-api.service';
         </table>
     `
 })
-export class WallCanvasComponent implements OnInit, AfterViewInit {
+export class WallCanvasComponent implements AfterViewInit {
 
     /** The room displayed by this {RoomCanvasComponent}. */
     private _wall: Wall;
@@ -132,8 +132,8 @@ export class WallCanvasComponent implements OnInit, AfterViewInit {
         }
 
         /* Calculate offsets. */
-        let offsetX = (cwidth - this._wall.width * ds);
-        let offsetY =  (cheight - this._wall.height * ds);
+        const offsetX = (cwidth - this._wall.width * ds);
+        const offsetY =  (cheight - this._wall.height * ds);
 
         for (const e of this._wall.exhibits) {
             if (!this._imageCache.has(e.path)) {
@@ -141,7 +141,10 @@ export class WallCanvasComponent implements OnInit, AfterViewInit {
                 image.src = this._service.urlForContent(e.path);
                 this._imageCache.set(e.path, image);
             }
-            this._context.drawImage(this._imageCache.get(e.path), offsetX / 2 + e.position.x * ds, offsetY / 2 + e.position.y * ds, e.size.x * ds, e.size.y * ds);
+            this._context.drawImage(
+                this._imageCache.get(e.path), offsetX / 2 + e.position.x * ds,
+                offsetY / 2 + e.position.y * ds, e.size.x * ds, e.size.y * ds
+            );
         }
     }
 
@@ -162,11 +165,11 @@ export class WallCanvasComponent implements OnInit, AfterViewInit {
         }
 
         /* Calculate offsets. */
-        let offsetX = (cwidth - this._wall.width * ds);
-        let offsetY =  (cheight - this._wall.height * ds);
+        const offsetX = (cwidth - this._wall.width * ds);
+        const offsetY =  (cheight - this._wall.height * ds);
 
         /* Set style for room walls. */
         this._context.fillStyle = '#CC3300';
-        this._context.fillRect(offsetX/2, offsetY/2, cwidth-offsetX, cheight-offsetY);
+        this._context.fillRect(offsetX / 2, offsetY / 2, cwidth - offsetX, cheight - offsetY);
     }
 }
