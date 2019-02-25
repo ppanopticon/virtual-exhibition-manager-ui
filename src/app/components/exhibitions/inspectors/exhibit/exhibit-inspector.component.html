@@ -19,12 +19,17 @@
 
 <h4 class="mat-h4">Size & Position</h4>
 
-<div class="full-width">
-    <app-vector3f-input *ngIf="exhibit.type == 'IMAGE' || exhibit.type == 'IMAGE'" [vector]="exhibit.size" [name]="'Size'" [show]="[true, true, false]" [disabled]="true">
-    </app-vector3f-input>
-</div>
+<mat-form-field class="full-width" *ngIf="exhibit.isOnWall">
+    <input matInput placeholder="Location" [value]="exhibit.location" disabled/>
+</mat-form-field>
+
 <div class="full-width">
     <app-vector3f-input class="full-width"  *ngIf="exhibit.type == 'IMAGE' || exhibit.type == 'IMAGE'" [vector]="exhibit.position" [name]="'Position'" [show]="[true, true, false]">
+    </app-vector3f-input>
+</div>
+
+<div class="full-width">
+    <app-vector3f-input *ngIf="exhibit.type == 'IMAGE' || exhibit.type == 'IMAGE'" [vector]="exhibit.size" [name]="'Size'" [show]="[true, true, false]" [disabled]="true">
     </app-vector3f-input>
 </div>
 

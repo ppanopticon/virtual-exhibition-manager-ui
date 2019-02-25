@@ -37,6 +37,19 @@ export class Exhibit implements IExhibit {
     }
 
     /**
+     * Returns a description of this {Exhibit}'s location.
+     */
+    get location() {
+        if (this.isOnWall) {
+            return `${(<Room>(<Wall>this._belongsTo)._belongsTo).text} (${ (<Wall>this._belongsTo).direction})`;
+        } else if (this.isInRoom) {
+            return `${(<Room>this._belongsTo).text}`;
+        } else {
+            return 'No location';
+        }
+    }
+
+    /**
      * Returns true, if this {Exhibit} hangs on a wall {Room}.
      */
     get isOnWall(): boolean {
