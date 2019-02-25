@@ -41,9 +41,9 @@ export class Exhibit implements IExhibit {
      */
     get location() {
         if (this.isOnWall) {
-            return `${(<Room>(<Wall>this._belongsTo)._belongsTo).text} (${ (<Wall>this._belongsTo).direction})`;
+            return `Wall (${(<Room>(<Wall>this._belongsTo)._belongsTo).text}, ${ (<Wall>this._belongsTo).direction})`;
         } else if (this.isInRoom) {
-            return `${(<Room>this._belongsTo).text}`;
+            return `Room (${(<Room>this._belongsTo).text})`;
         } else {
             return 'No location';
         }
