@@ -36,6 +36,41 @@ export class Wall implements IWall {
 
 
     /**
+     * Adds an {Exhibit} to this {Wall}
+     *
+     * @param e The {Exhibit} to add.
+     * @return True on success, false otherwise.
+     */
+    public addExhibit(e: Exhibit) {
+        if (e.type === 'IMAGE' || e.type === 'VIDEO') {
+            this.exhibits.push(e);
+            e._belongsTo = this;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Removes an {Exhibit} from this {Wall}
+     *
+     * @param e The {Exhibit} to remove OR its index.
+     * @return True on success, false otherwise.
+     */
+    public removeExhibit(e: (Exhibit | number)) {
+        if (e instanceof Exhibit) {
+            e = this.exhibits.indexOf(e);
+        }
+        if (e > -1 && e < this.exhibits.length) {
+            this.exhibits.splice(e, 1);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    /**
      * Getter for the number of {Exhibit}s.
      */
     get numberOfExhibits() {
