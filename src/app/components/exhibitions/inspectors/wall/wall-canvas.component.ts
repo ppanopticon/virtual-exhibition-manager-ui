@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {Wall} from '../../../../model/implementations/wall.model';
-import {of} from 'rxjs';
+import {VremApiService} from '../../../../services/http/vrem-api.service';
 
 @Component({
     selector: 'app-wall-canvas',
@@ -16,10 +16,9 @@ import {of} from 'rxjs';
         </table>
     `
 })
-export class WallCanvasComponent implements AfterViewInit {
+export class WallCanvasComponent implements OnInit, AfterViewInit {
 
     /** The room displayed by this {RoomCanvasComponent}. */
-    @Input('wall')
     private _wall: Wall;
 
     /** The canvas used to draw the {Room} overview. */
@@ -29,6 +28,16 @@ export class WallCanvasComponent implements AfterViewInit {
     /** Reference to the drawing context. */
     private _context: CanvasRenderingContext2D;
 
+    /** Internal cache for images. */
+    private _imageCache = new Map();
+
+    /**
+     * Default constructor.
+     *
+     * @param _service Reference to the {VremApiService}
+     */
+    constructor(private _service: VremApiService) {}
+
     /**
      * Lifecycle Hook (onInit): Initialises the drawing context.
      */
@@ -36,6 +45,22 @@ export class WallCanvasComponent implements AfterViewInit {
         const canvas = this._canvas.nativeElement;
         this._context = canvas.getContext('2d');
         this.update();
+    }
+
+    /**
+     * Setter for the wall property.
+     */
+    @Input('wall')
+    set wall(value: Wall) {
+        this._wall = value;
+        this._imageCache.clear();
+    }
+
+    /**
+     * Getter for the wall property.
+     */
+    get wall(): Wall {
+        return this._wall;
     }
 
     /**
@@ -106,17 +131,17 @@ export class WallCanvasComponent implements AfterViewInit {
             ds = cheight / this._wall.height;
         }
 
-        /* Set style for drawing the exhibits. */
-        this._context.strokeStyle = '#FFB300';
-        this._context.fillStyle = ' #FFB300';
-
         /* Calculate offsets. */
         let offsetX = (cwidth - this._wall.width * ds);
         let offsetY =  (cheight - this._wall.height * ds);
 
-        for (let e of this._wall.exhibits) {
-            /* Draw exhibit. */
-            this._context.fillRect(offsetX / 2 + e.position.x * ds, offsetY / 2 + e.position.y * ds  , e.size.x * ds, e.size.y * ds);
+        for (const e of this._wall.exhibits) {
+            if (!this._imageCache.has(e.path)) {
+                const image = new Image(0, 0);
+                image.src = this._service.urlForContent(e.path);
+                this._imageCache.set(e.path, image);
+            }
+            this._context.drawImage(this._imageCache.get(e.path), offsetX / 2 + e.position.x * ds, offsetY / 2 + e.position.y * ds, e.size.x * ds, e.size.y * ds);
         }
     }
 
