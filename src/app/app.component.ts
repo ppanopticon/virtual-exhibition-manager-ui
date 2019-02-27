@@ -82,7 +82,9 @@ export class AppComponent {
    * @param summary The selected ExhibitionSummary
    */
   public handleExhibitionSelection(summary: ExhibitionSummary) {
-    this._router.navigate([summary.objectId]);
+    if (window.confirm('Do you really want to change the active exhibition? All unsaved changes will be lost!') === true) {
+      this._router.navigate([summary.objectId]);
+    }
   }
 
   /**
