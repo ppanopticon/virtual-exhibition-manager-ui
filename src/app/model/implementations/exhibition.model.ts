@@ -7,17 +7,19 @@ import {Room} from './room.model';
 export class Exhibition implements IExhibition {
 
     /** List of @type {Rooms} for this @type {Exhibition}. */
-    public readonly rooms: Room[] = [];
+    public rooms: Room[] = [];
 
     /**
      * Copies a @type {IExhibition} to a new @type {Exhibition} object.
      *
      * @param e IExhibition object
+     * @param target The target for the Proxy object.
      */
-    public static copy(e: IExhibition): Exhibition {
-        const n =  new Exhibition(e.id, e.name, e.description);
+    public static copyAsProxy(e: IExhibition, target: object): Exhibition {
+        const n = new Proxy(new Exhibition(e.id, e.name, e.description), target);
+        n.rooms = new Proxy([], target);
         for (const r of e.rooms) {
-            const rc = Room.copy(r);
+            const rc = Room.copyAsProxy(r, target);
             rc._belongsTo = n;
             n.rooms.push(rc);
         }
@@ -40,7 +42,7 @@ export class Exhibition implements IExhibition {
     }
 
     /**
-     * Adds a copy of the provided {Room} to this {Exhibition}
+     * Adds a copyAsProxy of the provided {Room} to this {Exhibition}
      *
      * @param r The {Room} to delete OR the index of the {Room} to delete.
      * @return true on success, false otherwise.

@@ -3,7 +3,7 @@ import {VremApiService} from './services/http/vrem-api.service';
 import {from, Observable} from 'rxjs';
 import {ExhibitionSummary} from './model/interfaces/exhibition/exhibition-summary.interface';
 import {Router, RoutesRecognized} from '@angular/router';
-import {flatMap, share} from 'rxjs/operators';
+import {flatMap, map, share} from 'rxjs/operators';
 import {EditorService} from './services/editor/editor.service';
 import {MatSnackBar, MatSnackBarConfig} from '@angular/material';
 
@@ -47,6 +47,25 @@ export class AppComponent {
       } else {
         return 'Please select an exhibition...';
       }
+  }
+
+
+  /**
+   * Getter for the current {EditorService} status
+   */
+  get status(): Observable<string> {
+    return this._editor.dirtyObservable.pipe(
+        map(d => d ? 'Unsaved changes' : 'Changes saved')
+    );
+  }
+
+  /**
+   * Getter for the current {EditorService} status
+   */
+  get statusClass(): Observable<string> {
+    return this._editor.dirtyObservable.pipe(
+        map(d => d ? 'unsaved' : 'saved')
+    );
   }
 
   /**

@@ -6,6 +6,9 @@
 
     <div>
         <button mat-button [matMenuTriggerFor]="exhibitionMenu">{{title}}</button>
+
+        <span class="status {{(statusClass|async)}}">{{(status|async)}} </span>
+
         <mat-menu #exhibitionMenu="matMenu">
             <button (click)="handleExhibitionSelection(exhibition)" mat-menu-item *ngFor='let exhibition of (exhibitions | async)'>{{exhibition.name}}</button>
         </mat-menu>
@@ -17,6 +20,8 @@
         <button  *ngIf="hasActive" mat-icon-button (click)="handleReloadClick()">
             <mat-icon aria-label="Reload exhibition" matTooltip="Reload exhibition from server">refresh</mat-icon>
         </button>
+
+
     </div>
 
 

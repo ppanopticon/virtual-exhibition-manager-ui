@@ -6,7 +6,7 @@ import {Room} from './room.model';
 
 export class Wall implements IWall {
     /** List of @type {Exhibit}s placed on this @type {Wall}. */
-    public readonly exhibits: Exhibit[] = [];
+    public exhibits: Exhibit[] = [];
 
     /** Reference to the {Room} this {Wall} belongs to. */
     public _belongsTo: (Room | null);
@@ -23,17 +23,18 @@ export class Wall implements IWall {
      * Copies a @type {IWall} to a new @type {Wall} object.
      *
      * @param w IWall object
+     * @param target The target for the Proxy object.
      */
-    public static copy(w: IWall): Wall{
-        const n = new Wall(w.direction, w.color, w.texture);
+    public static copyAsProxy(w: IWall, target: object = {}): Wall {
+        const n = new Proxy(new Wall(w.direction, w.color, w.texture), target);
+        n.exhibits = new Proxy([], target);
         for (const e of w.exhibits) {
-            const ec = Exhibit.copy(e);
+            const ec = Exhibit.copyAsProxy(e, target);
             ec._belongsTo = n;
             n.exhibits.push(ec);
         }
         return n;
     }
-
 
     /**
      * Adds an {Exhibit} to this {Wall}
@@ -58,14 +59,17 @@ export class Wall implements IWall {
      * @return True on success, false otherwise.
      */
     public removeExhibit(e: (Exhibit | number)) {
-        if (e instanceof Exhibit) {
-            e = this.exhibits.indexOf(e);
-        }
-        if (e > -1 && e < this.exhibits.length) {
-            this.exhibits.splice(e, 1);
-            return true;
-        } else {
-            return false;
+        if (e instanceof Exhibit && e._belongsTo === this) {
+            const idx = this.exhibits.indexOf(e);
+            if (idx > -1 && idx < this.exhibits.length) {
+                e._belongsTo = null;
+                this.exhibits.splice(idx, 1);
+            }
+        } else if (typeof e === 'number') {
+            if (e > -1 && e < this.exhibits.length) {
+                this.exhibits[e]._belongsTo = null;
+                this.exhibits.splice(e, 1);
+            }
         }
     }
 

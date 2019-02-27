@@ -16,6 +16,9 @@ export class EditorService {
     /** Reference to the currently inspected element. May be the Exhibition, a Room, Wall or individual Exhibit. */
     private _inspectedElement: BehaviorSubject<(Exhibition | Room | Wall | Exhibit)> = new BehaviorSubject(null);
 
+    /** A flag indicating, whether this {EditorService} has unsaved changes. */
+    private _dirty: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
     /**
      * Default constructor.
      *
@@ -28,6 +31,20 @@ export class EditorService {
      */
     get current(): (Exhibition | null) {
         return this._activeExhibition.value;
+    }
+
+    /**
+     * Getter for the current dirty value.
+     */
+    get dirty(): boolean {
+        return this._dirty.getValue();
+    }
+
+    /**
+     * Getter for the dirty Observable.
+     */
+    get dirtyObservable(): Observable<boolean> {
+        return this._dirty.asObservable();
     }
 
     /**
@@ -84,7 +101,10 @@ export class EditorService {
         return this._api.save(this._activeExhibition.value).pipe(
             first(),
             tap(e => {
-                this._activeExhibition.next(Exhibition.copy(e));
+                this._activeExhibition.next(
+                    Exhibition.copyAsProxy(e, {set: (o, p, v) => this.handleSet(o, p, v), deleteProperty: (o, t) => this.handleDelete(o, t)})
+                );
+                this._dirty.next(false);
             }),
             map(e => true),
             catchError(() => of(false))
@@ -101,7 +121,10 @@ export class EditorService {
         return this._api.load(id).pipe(
             first(),
             tap( e => {
-                this._activeExhibition.next(Exhibition.copy(e));
+                this._activeExhibition.next(
+                    Exhibition.copyAsProxy(e, {set: (o, p, v) => this.handleSet(o, p, v), deleteProperty: (o, t) => this.handleDelete(o, t)})
+                );
+                this._dirty.next(false);
             }),
             map(e => true),
             catchError(() => of(false))
@@ -119,5 +142,30 @@ export class EditorService {
         } else {
             return of(false);
         }
+    }
+
+    /**
+     * Getter-handler for Proxy object. Simply returns the requested parameter and wraps array and object in Proxys.
+     *
+     * @param obj The target object.
+     * @param prop The target property.
+     */
+    private handleDelete(obj, prop) {
+        delete obj[prop];
+        this._dirty.next(true);
+        return true;
+    }
+
+    /**
+     * Setter-handler for Proxy object. Sets the local dirty flag.
+     *
+     * @param obj The target object.
+     * @param prop The target attribute.
+     * @param value The new value.
+     */
+    private handleSet(obj, prop, value): boolean {
+        obj[prop] = value;
+        this._dirty.next(true);
+        return true;
     }
 }

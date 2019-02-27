@@ -22,22 +22,42 @@
 
                 <div [style.display]="'flex'" [style.justify-content]="'space-between'">
                     <h2 class="mat-h2">{{room.text}}</h2>
-                    <button mat-mini-fab color="warn" matTooltip="Delete room '{{room.text}}' from exhibition." (click)="deleteRoom(room)">
+                    <button mat-mini-fab color="warn" matTooltip="Delete room '{{room.text}}' from exhibition." (click)="removeRoom(room)">
                         <mat-icon>delete</mat-icon>
                     </button>
                 </div>
 
-                <mat-tree [dataSource]="(roomDataSources|async).get(room)" [treeControl]="treeControl" class="room-tree">
+                <mat-tree [dataSource]="[room]" [treeControl]="treeControl" class="room-tree">
 
-                    <mat-nested-tree-node *matTreeNodeDef="let node; when: isFiller">
+                    <mat-nested-tree-node *matTreeNodeDef="let node; when: isRoom">
+                        <ng-container matTreeNodeOutlet></ng-container>
+                    </mat-nested-tree-node>
+
+                    <mat-nested-tree-node *matTreeNodeDef="let node; when: isWallFiller">
                         <li>
                             <div class="mat-tree-node">
-                                <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+                                <button mat-icon-button matTreeNodeToggle>
                                     <mat-icon class="mat-icon-rtl-mirror">
                                         {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
                                     </mat-icon>
                                 </button>
-                                {{node.name}}
+                                Walls ({{node.length}})
+                            </div>
+                            <ul [class.room-tree-invisible]="!treeControl.isExpanded(node)">
+                                <ng-container matTreeNodeOutlet></ng-container>
+                            </ul>
+                        </li>
+                    </mat-nested-tree-node>
+
+                    <mat-nested-tree-node *matTreeNodeDef="let node; when: isExhibitFiller">
+                        <li>
+                            <div class="mat-tree-node">
+                                <button mat-icon-button matTreeNodeToggle>
+                                    <mat-icon class="mat-icon-rtl-mirror">
+                                        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                                    </mat-icon>
+                                </button>
+                                3D Exhibits ({{node.length}})
                             </div>
                             <ul [class.room-tree-invisible]="!treeControl.isExpanded(node)">
                                 <ng-container matTreeNodeOutlet></ng-container>
@@ -48,13 +68,13 @@
 
                     <mat-nested-tree-node *matTreeNodeDef="let node; when: isWall">
                         <li>
-                            <div [className]="(inspected|async)==node.payload ? 'mat-tree-node selected' : 'mat-tree-node'" (click)="wallClicked($event, node.payload)">
-                                <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+                            <div [className]="(inspected|async)==node ? 'mat-tree-node selected' : 'mat-tree-node'" (click)="wallClicked($event, node)">
+                                <button mat-icon-button matTreeNodeToggle>
                                     <mat-icon class="mat-icon-rtl-mirror">
                                         {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
                                     </mat-icon>
                                 </button>
-                                {{node.name}}
+                                {{node.designation}} ({{node.numberOfExhibits}})
                             </div>
                             <ul [class.room-tree-invisible]="!treeControl.isExpanded(node)">
                                 <ng-container matTreeNodeOutlet></ng-container>
@@ -63,8 +83,9 @@
                     </mat-nested-tree-node>
 
                     <mat-tree-node *matTreeNodeDef="let node; when: isExhibit" >
-                        <div [className]="(inspected|async)==node.payload ? 'mat-tree-node selected' : 'mat-tree-node'" (click)="exhibitClicked($event, node.payload)">
-                            <p>Exhibit: {{node.payload.name}}</p>
+                        <div [className]="(inspected|async)==node ? 'mat-tree-node selected' : 'mat-tree-node'" (click)="exhibitClicked($event, node)">
+                            <p>Exhibit: {{node.name}}</p>
+                            <button mat-icon-button (click)="removeExhibitClicked($event, node)" matTooltip="Remove exhibit from '{{node.location}}'."><mat-icon>delete</mat-icon></button>
                         </div>
                     </mat-tree-node>
                 </mat-tree>

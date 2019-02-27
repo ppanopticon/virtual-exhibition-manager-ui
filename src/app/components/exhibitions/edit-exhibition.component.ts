@@ -7,7 +7,6 @@ import {Exhibit} from '../../model/implementations/exhibit.model';
 import {NestedTreeControl} from '@angular/cdk/tree';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {MatTreeNestedDataSource} from '@angular/material';
 
 @Component({
     selector: 'app-edit-exhibitions',
@@ -17,15 +16,27 @@ import {MatTreeNestedDataSource} from '@angular/material';
 export class EditExhibitionComponent {
 
     /** The {NestedTreeControl} for the per-room tree list. */
-    private _treeControl = new NestedTreeControl<RoomNode>(node => node.children);
+    private _treeControl = new NestedTreeControl<any>(node => {
+        if (node instanceof Room) {
+            return [node.walls, node.exhibits];
+        } else if (node instanceof Wall) {
+            return node.exhibits;
+        } else if (node instanceof Exhibit) {
+            return [];
+        } else {
+            return node;
+        }
+    });
 
     /** The data source for the per-room tree list. */
-    private _roomDataSources: Observable<Map<Room, MatTreeNestedDataSource<RoomNode>>>;
+    private _roomDataSources: Observable<Room[]>;
 
     /** Helper functions to render the tree list. */
-    public readonly isFiller = (_: number, node: RoomNode) => !node.payload;
-    public readonly isWall = (_: number, node: RoomNode) => !!node.payload && node.payload instanceof Wall;
-    public readonly isExhibit = (_: number, node: RoomNode) => !!node.payload && node.payload instanceof Exhibit;
+    public readonly isWallFiller = (_: number, node: (Room | Wall | Exhibit)) => Array.isArray(node) && _ === 0;
+    public readonly isExhibitFiller = (_: number, node: (Room | Wall | Exhibit)) => Array.isArray(node)  && _ === 1;
+    public readonly isRoom = (_: number, node: (Room | Wall | Exhibit | FillerNode)) => node instanceof Room;
+    public readonly isWall = (_: number, node: (Room | Wall | Exhibit | FillerNode)) => node instanceof Wall;
+    public readonly isExhibit = (_: number, node: (Room | Wall | Exhibit | FillerNode)) => node instanceof Exhibit;
 
     /**
      * Default constructor.
@@ -33,13 +44,7 @@ export class EditExhibitionComponent {
      * @param _editor Reference to the {EditorService}
      */
     constructor(private _editor: EditorService) {
-        this._roomDataSources = this._editor.currentObservable.pipe(
-            map( e =>  {
-                const rooms = new Map();
-                e.rooms.forEach(r => rooms.set(r, this.hierarchy(r)));
-                return rooms;
-            })
-        );
+        this._roomDataSources = this._editor.currentObservable.pipe(map( e => e.rooms));
     }
 
     /**
@@ -57,16 +62,9 @@ export class EditExhibitionComponent {
     }
 
     /**
-     * Getter for the per room data source.
-     */
-    get roomDataSources(): Observable<Map<Room, MatTreeNestedDataSource<RoomNode>>> {
-        return this._roomDataSources;
-    }
-
-    /**
      * Getter for the tree control.
      */
-    get treeControl(): NestedTreeControl<RoomNode> {
+    get treeControl(): NestedTreeControl<(Room | Wall | Exhibit)> {
         return this._treeControl;
     }
 
@@ -74,7 +72,7 @@ export class EditExhibitionComponent {
      * Creates and adds a new {Room} to the current {Exhibition}.
      */
     public addNewRoom() {
-        this._editor.current.addRoom(Room.empty())
+        this._editor.current.addRoom(Room.empty());
     }
 
     /**
@@ -82,39 +80,8 @@ export class EditExhibitionComponent {
      *
      * @param r The {Room} to delete.
      */
-    public deleteRoom(r: Room): void {
+    public removeRoom(r: Room): void {
         this._editor.current.deleteRoom(r);
-    }
-
-    /**
-     * Hierarchy for displaying the tree list per room.
-     *
-     * @param r The room for which to return the hierarchy.
-     */
-    public hierarchy(r: Room): RoomNode[] {
-        return [
-            {
-                name: `Walls (${r.walls.length})`,
-                children: r.walls.map(w => {
-                    return <RoomNode>{
-                        name: `Wall (${r.text}, ${w.direction})`,
-                        payload: w,
-                        children: w.exhibits.map(e => {
-                            return <RoomNode>{
-                                name: e.name,
-                                payload: e
-                            };
-                        })
-                    };
-                })
-            },
-            {
-                name: `3D exhibits (${r.exhibits.length})`,
-                children:  r.exhibits.map(e => {
-                    return <RoomNode>{name: e.name, payload: e, children: []};
-                })
-            }
-        ];
     }
 
     /**
@@ -169,6 +136,17 @@ export class EditExhibitionComponent {
     }
 
     /**
+     *
+     * @param event
+     * @param rw
+     * @param e
+     */
+    public removeExhibitClicked(event: MouseEvent, e: Exhibit) {
+        e._belongsTo.removeExhibit(e);
+        event.stopPropagation();
+    }
+
+    /**
      * Called whenever a user clicks a {Exhibition}.
      * @param event The mouse event.
      * @param exhibition The {Exhibition} that has been clicked.
@@ -215,8 +193,7 @@ export class EditExhibitionComponent {
  * Food data with nested structure.
  * Each node has a name and an optiona list of children.
  */
-interface RoomNode {
-    name: string;
-    payload?: (Wall | Exhibit);
-    children?: RoomNode[];
+interface FillerNode {
+    walls: Wall[];
+    exhibits: Exhibit[];
 }

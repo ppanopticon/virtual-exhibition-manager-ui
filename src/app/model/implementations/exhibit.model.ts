@@ -3,6 +3,8 @@ import {CHOType} from '../interfaces/objects/cho-type.interface';
 import {Vector3f} from '../interfaces/general/vector-3f.model';
 import {Room} from './room.model';
 import {Wall} from './wall.model';
+import {IRoom} from '../interfaces/room/room.interface';
+import {IExhibition} from '../interfaces/exhibition/exhibition.interface';
 
 export class Exhibit implements IExhibit {
 
@@ -31,9 +33,13 @@ export class Exhibit implements IExhibit {
      * Copies a @type {IExhibit} to a new @type {Exhibit} object.
      *
      * @param e IExhibit object
+     * @param target The target for the Proxy object.
      */
-    public static copy(e: IExhibit): Exhibit {
-        return new Exhibit(e.id, e.name, e.type, e.description, e.path, e.light, e.audio, e.position, e.size);
+    public static copyAsProxy(e: IExhibit, target: object): Exhibit {
+        return new Proxy(
+            new Exhibit(e.id, e.name, e.type, e.description, e.path, e.light, e.audio, e.position, e.size),
+            target
+        );
     }
 
     /**
